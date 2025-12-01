@@ -1,4 +1,3 @@
-// pages/healthz.js
 export async function getServerSideProps({ res }) {
   res.setHeader('Content-Type', 'application/json');
   res.statusCode = 200;

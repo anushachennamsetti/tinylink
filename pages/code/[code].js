@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ArrowLeft, ExternalLink, Clock, Link2, BarChart3 } from "lucide-react";
 import { query } from "../../lib/db";
 
 export async function getServerSideProps(context) {
@@ -33,7 +34,6 @@ export default function StatsPage({ link }) {
   const [createdAt, setCreatedAt] = useState("");
   const [lastClicked, setLastClicked] = useState("");
 
-  // Generate values ONLY IN CLIENT to prevent SSR mismatch
   useEffect(() => {
     setShortUrl(`${window.location.origin}/${link.code}`);
 
@@ -49,76 +49,104 @@ export default function StatsPage({ link }) {
   return (
     <div className="max-w-4xl mx-auto space-y-10">
 
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800">
-          Stats for <span className="text-blue-600">{link.code}</span>
-        </h1>
-        <p className="text-gray-500">Link analytics overview</p>
+      {/* HEADER */}
+      <div className="flex items-center gap-3">
+        <BarChart3 className="text-blue-600 dark:text-blue-400" size={32} />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Analytics — <span className="text-blue-600 dark:text-blue-400">{link.code}</span>
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400">
+            Detailed link performance overview
+          </p>
+        </div>
       </div>
 
+      {/* ANALYTICS CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <p className="text-gray-500 text-sm">Total Clicks</p>
-          <p className="text-4xl font-bold mt-2">{link.total_clicks}</p>
+        {/* TOTAL CLICKS */}
+        <div className="p-6 rounded-xl bg-white/90 dark:bg-gray-800/60 backdrop-blur shadow-lg border border-gray-200 dark:border-gray-700">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Total Clicks</p>
+          <p className="text-4xl font-bold mt-2 text-gray-900 dark:text-white">
+            {link.total_clicks}
+          </p>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <p className="text-gray-500 text-sm">Created</p>
-          <p className="text-lg font-semibold mt-2">
+        {/* CREATED AT */}
+        <div className="p-6 rounded-xl bg-white/90 dark:bg-gray-800/60 backdrop-blur shadow-lg border border-gray-200 dark:border-gray-700">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Created At</p>
+          <div className="flex items-center gap-2 mt-2 text-gray-900 dark:text-white font-semibold">
+            <Clock size={18} />
             {createdAt || "Loading..."}
-          </p>
+          </div>
         </div>
 
-        <div className="bg-white shadow rounded-lg p-6">
-          <p className="text-gray-500 text-sm">Last Clicked</p>
-          <p className="text-lg font-semibold mt-2">
+        {/* LAST CLICKED */}
+        <div className="p-6 rounded-xl bg-white/90 dark:bg-gray-800/60 backdrop-blur shadow-lg border border-gray-200 dark:border-gray-700">
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Last Clicked</p>
+          <div className="flex items-center gap-2 mt-2 text-gray-900 dark:text-white font-semibold">
+            <Clock size={18} />
             {lastClicked || "Never"}
-          </p>
+          </div>
         </div>
 
       </div>
 
-      <div className="bg-white shadow-lg rounded-xl p-6 space-y-4">
+      {/* LINK INFORMATION CARD */}
+      <div className="p-6 rounded-xl bg-white/90 dark:bg-gray-800/60 backdrop-blur shadow-lg border border-gray-200 dark:border-gray-700 space-y-6">
+
+        {/* SHORT URL */}
         <div>
-          <p className="text-gray-500 text-sm">Short URL</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Short URL</p>
 
           <a
-            className="text-blue-600 underline break-all"
-            href={shortUrl || `/${link.code}`}
+            href={shortUrl}
             target="_blank"
+            className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:underline break-all mt-1"
           >
-            {shortUrl || `/${link.code}`}
+            <Link2 size={18} />
+            {shortUrl}
+            <ExternalLink size={16} />
           </a>
         </div>
 
+        {/* TARGET URL */}
         <div>
-          <p className="text-gray-500 text-sm">Target URL</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">Destination URL</p>
+
           <a
             href={link.target_url}
-            className="text-blue-600 underline break-all"
             target="_blank"
+            className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold hover:underline break-all mt-1"
           >
             {link.target_url}
+            <ExternalLink size={16} />
           </a>
         </div>
+
       </div>
 
+      {/* ACTION BUTTONS */}
       <div className="flex gap-4">
+
         <a
           href="/"
-          className="px-5 py-3 bg-gray-800 text-white rounded-lg hover:bg-black transition font-semibold"
+          className="flex items-center gap-2 px-5 py-3 bg-gray-800 dark:bg-gray-700 text-white rounded-lg hover:bg-black dark:hover:bg-gray-900 transition font-semibold"
         >
+          <ArrowLeft size={18} />
           Back to Dashboard
         </a>
 
         <a
           href={`/${link.code}`}
           target="_blank"
-          className="px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
+          className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold"
         >
+          <ExternalLink size={18} />
           Visit Link
         </a>
+
       </div>
 
     </div>
